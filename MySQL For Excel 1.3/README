@@ -1,0 +1,17 @@
+Copyright (c) 2012, 2019, Oracle and/or its affiliates. All rights reserved. 
+
+This is a release of MySQL for Excel, an Excel add-in enabling data analysts to very easily access and manipulate MySQL data within Microsoft Excel.
+
+License information can be found in the LICENSE file. 
+This distribution may include materials developed by third parties. For license 
+and attribution notices for these materials, please refer to the LICENSE file. 
+
+For more information on MySQL for Excel visit
+https://www.mysql.com/why-mysql/windows/excel/
+or
+https://dev.mysql.com/doc/mysql-for-excel/en/
+
+For additional downloads and the source of MySQL for Excel visit
+https://dev.mysql.com/downloads/windows/excel/
+
+MySQL for Excel is brought to you by the MySQL team at Oracle.

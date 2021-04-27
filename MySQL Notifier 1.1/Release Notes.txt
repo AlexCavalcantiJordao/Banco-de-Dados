@@ -1,0 +1,139 @@
+MySQL Notifier 1.1.8 Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL Notifier 1.1.8
+
+* Connections to MySQL Server 8.0 using strong password authentication (via the caching_sha2_password authentication plugin) are now supported.
+* Connections using SSL are now supported. These connections may be created from MySQL Workbench or directly in MySQL Notifier
+* SSH tunneled connections are also supported now, the tunnel is created automatically and no need to have an intermediate software to create
+  the tunnel, just the way also MySQL Workbench transparently works.
+* Fixed the display of an unhandled exception when the user does not accept the UAT dialog shown when launching MySQL Installer. If the user
+  cancels nothing happens, but if any other exception happens when launching it is displayed to users and logged.
+* Changed the "Automatically check for MySQL updates" option to perform the check every X days instead of weeks, this offers a better frequency
+  for users. The valid values for the option are between 1 and 365. Any previously saved value will be automatically converted from weeks to
+  days when launching a version of MySQL Notifer >= 1.1.8. Changed the behavior of the "Check for Updates..." menu item to immediately query
+  MySQL Installer for updates on products, in the same way the scheduled task queries MySQL Installer for updates, instead of just launching
+  MySQL Installer. NOTE: Checking for updates needs MySQL Installer to be upgraded to the version 1.4.31 or greater.
+* Notifier now adds automatically a monitoring entry for a locally running MySQL Router Windows service when MySQL Notifier starts.
+  Also changed the behavior when automatically adding local MySQL Windows services to the monitoring list so every time Notifier is started
+  it checks if it needs to add newly added MySQL Windows services, as opposed to past behavior when this was done only the very first time
+  MySQL Notifer was run.
+* Fixed a bug in the detection of the "Run at Windows startup" setting and also a bug in the Options dialog that was applying changes even
+  when cancelling the dialog.
+* Fixed the way MySQL Workbench is being opened to use a double-dash when using its command line options, so that it is opened on the right
+  server configuration page if an entry in Workbench's server_instances.xml file matches the service or instance being monitored.
+* Changed the behavior of the "Add..." button of the "Manage Items" dialog, so when clicked it calls either the "Add Service" or the "Monitor
+  MySQL Server Instance" dialog depending on the currently selected tab page "Services" or "Instances". This is a more intuitive UX and removes
+  the need to click a context menu option when clicking "Add...".
+
+
+MySQL Notifier 1.1.7 Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL Notifier 1.1.7
+
+* Enhanced the logic that migrates stored MySQL connections to the MySQL Workbench connections.xml file. In previous versions the migration was
+  offered and if not done at that moment, the dialog to migrate was shown again periodically, but there was no way to choose to remain storing
+  MySQL connections in the Notifier's configuration folder instead of merging them with the Workbench ones. Now the connections migration dialog
+  offers a way to postpone the migration 1 hour, 1 day, 1 week, 1 month or indefinitely. If the migration is postponed the dialog is shown again
+  after that time elapses, although if it is postponed indefinitely an option was added to the Options dialog that permits the migration of
+  connections to be done manually, as long as MySQL Workbench is installed.
+* Fixed the way MySQL Server connections and servers information is loaded during the initialization of the MySQL Notifier.
+* Fixed code that checks if a Windows Service to be monitored is actually one for a MySQL Server. Previous checks were relying on the Windows
+  Registry which is only valid for local computers. For remote computers the information can be queried through WMI.
+* Fixed the regular expression used for the user names validation so that a user name in a "<domain>\<username>" format is treated as valid.
+  Updated the regular expressions that validate a host name or IP address as well.
+* Fixed the WMI query that retrieves the Windows Services in a local or remote computer to filter by the class appropriate to services shown in
+  the Windows Services console.
+* Fixed code so that when a new Windows Service for a MySQL Server is added, its name is recognized with its casing as is.
+* Added code to let users retry the loading of a connections information XML file, and re-create the file from scratch if loading fails. This is
+  in case the connections.xml file gets corrupted for any reason. The only way to get the "Root element is missing" error is if the XML file
+  got corrupted.
+* Fixed code so that the initialization of the errors handler is initialized before any code that uses it.
+
+
+
+MySQL Notifier 1.1.6 Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL Notifier 1.1.6
+
+* Changed the way Notifier loaded local instances information making that process now independent from my.ini files.
+* Changed the way Notifier detected changes in the Workbench connections file. This fixes the problem of not removing connections that were deleted
+  from workbench and still apeared in notifier. Now we perform a data scrubbing so that list excludes connections that were deleted in workbench.
+* Changed the way Notifier auto adds services to the monitored list, now the Notifier verifies if a potencial MySql service (one that matches the
+  name filter criteria) is running from one of the mysql executable files, Demonstrating it is a real MySql service.
+* Check for updates functionality has been fixed, Notifier is now able to check for updates periodically thru the creation of system task.
+  This functionality was reported to be broken in previous versions of notifier.
+
+
+
+MySQL Notifier 1.1.5 Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL Notifier 1.1.5
+
+* Edition of MySQL Workbench connections right from the Monitor MySQL Server Instance window of the MySQL Notifier (accessed through Actions
+  > Manage Monitored Items... > Add... > MySQL Instance). Any of the listed MySQL Workbench connections can be right-clicked and a new "Edit
+  Connection" context menu is available for users to edit the Workbench connection properties.  This feature shines brighter when MySQL
+  Workbench is not installed since users only relied on MySQL Workbench to edit a connection, without Workbench users had to delete a 
+  connection and create it again with updated values.
+* When there were MySQL instances being monitored at Notifier created from a Workbench connection,  if they were deleted using MySQL Workbench
+  the connections would not be removed from the Notifier until a manual restart. These external changes to the connections file are now being
+  monitored automatically and MySQL instances refreshed accordingly.
+* Changed the way the Workbench connections and servers files are monitored, now the Notifier detects automatically when Workbench is installed
+  or uninstalled and starts or stops monitoring its files on those events so the Notifier does not need to be restarted to setup the monitoring
+  of the files.
+
+
+
+MySQL Notifier 1.1.4 Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL Notifier 1.1.4
+
+* Monitoring of services in remote Windows computers through WMI (see 'WMI Configuration' below this section for details).
+  - Remote services can be started, stopped and restarted (just as local services on MySQL Notifier 1.0).
+	- Balloon notifications are displayed for each monitored remote service status change (just as local services on MySQL Notifier 1.0)
+  - Monitored services (local and remote) are grouped and saved by machine.
+  - Windows services are automatically added in any monitored machine (localhost or remote) as long as the service names contain the text
+    specified in the "Automatically add new services whose name contains:" option. By default this option is set to "mysql".
+  - Remote Machines status are checked regularly (via a configurable timer) to generate notifications about machines going online/offline.
+* Monitoring of MySQL Instances (multi-platform) via a configurable timer.
+  - Instances can be monitored by selecting existing MySQL Workbench connections and balloon notifications are displayed for each
+	  monitored instance status change.
+  - MySQL Workbench connections are maintained directly in MySQL Workbench files if installed or in MySQL Notifer files otherwise, and
+	  are migrated to MySQL Workbench when it is installed.
+	- Monitored instances display the SQL Editor and Configure Instance menus (as similar local services do) and the connection used to
+	  monitor the instance is displayed in bold.
+	- MySQL Notifier is launched right after installed and on every restart. This behavior can be changed through the options Window.
+
+Known Limitations
+--------------------
+* MySQL Workbench-related menus (SQL Editor and Configure Instance) are not available for monitored remote services.
+  Workaround: Open MySQL Workbench and select the connection of the monitored remote service.
+* MySQL Workbench connections used to monitor MySQL instances cannot be edited, just added or deleted.
+  Workaround: Open MySQL Workbench and edit the desired connection.
+
+
+
+MySQL Notifier 1.0.3 Release Notes
+------------------------------------
+
+Welcome to the release notes for MySQL Notifier 1.0.3
+
+MySQL Notifier provides the following features:
+* Runs in the notification area
+* Monitors any service
+* Allows easy access to start/stop/restart services
+* Notifies you of running state changes on the services
+* Provides easy access to edit and configure options for MySQL services
+* Integrates with MySQL Workbench
+* Integrate seamless with MySQL Installer to inform you of updates to your products
+
+Known Issues
+--------------------
+* All Windows - Selecting SQL Editor from a MySQL service that doesn't have a Workbench connection opens Workbench in the home screen.
+  Workaround: Create a local connection in Workbench with the MySQL service used in the Notifier so the SQL Editor could use this connection.
+* Windows XP - The Scheduled Task created by the Notifier to Check for Updates does not have valid credentials and cannot be run.
+  Workaround: Update the "MySQLNotifierTask" in Windows XP with some valid credentials.
